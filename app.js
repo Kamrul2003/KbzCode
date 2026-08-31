@@ -1,10 +1,14 @@
   const tabs = document.querySelectorAll('.tab'),
         preview = document.querySelector('.previewSrc'),
         cReset = document.querySelector('.commndReset'),
-        Doc1 = document.querySelector('.htmlCoder'),
-        Doc2 = document.querySelector('.cssCoder'),
-        Doc3 = document.querySelector('.jsCoder');
+        htmlFile = document.querySelector('.htmlCoder'),
+        cssFile = document.querySelector('.cssCoder'),
+        jsFile = document.querySelector('.jsCoder');
   
+
+/* ========================================
+    ✅ Apply ==III== TAB CLICKING TO CHANGE FILE
+======================================== */
   // Click event add koro
   tabs.forEach(n => {
       n.addEventListener('click', function() {
@@ -21,17 +25,17 @@
           this.style = "background-image: url('bg.png');";
         
         if(BodyData==='HTML'){
-          Doc1.style.display = 'block';
-          Doc2.style.display = 'none';
-          Doc3.style.display = 'none';
+          htmlFile.style.display = 'block';
+          cssFile.style.display = 'none';
+          jsFile.style.display = 'none';
         }else if(BodyData==='CSS'){
-          Doc2.style.display = 'block';
-          Doc3.style.display = 'none';
-          Doc1.style.display = 'none';
+          cssFile.style.display = 'block';
+          jsFile.style.display = 'none';
+          htmlFile.style.display = 'none';
         }else if(BodyData==='JS'){
-          Doc3.style.display = 'block';
-          Doc1.style.display = 'none';
-          Doc2.style.display = 'none';
+          jsFile.style.display = 'block';
+          htmlFile.style.display = 'none';
+          cssFile.style.display = 'none';
         }
       });
   });
@@ -39,19 +43,19 @@
   
   
 /* ========================================
-   CREATE LIVE DOCUMENT
+    ✅ Apply ==III== CREATE LIVE DOCUMENT
 ======================================== */
-createPreview();
+//.createPreview();
 function createPreview() {
 
     // Get user's HTML
-    const html = Doc1.value;
+    const html = htmlFile.value;
 
     // Get user's CSS
-    const css = Doc2.value;
+    const css = cssFile.value;
 
     // Get user's JavaScript
-    const js = Doc3.value;
+    const js = jsFile.value;
 
     /*
         Combine HTML + CSS + JS
@@ -73,7 +77,7 @@ function createPreview() {
           ${html}
         <script>
           ${js}
-        </script>
+        <\/script>
       </body>
     </html>
   `;
@@ -95,26 +99,26 @@ function createPreview() {
     createPreview() will run.
 */
 
-Doc1.addEventListener("input", createPreview);
+htmlFile.addEventListener("input", createPreview);
 
-Doc2.addEventListener("input", createPreview);
+cssFile.addEventListener("input", createPreview);
 
-Doc3.addEventListener("input", createPreview);
+jsFile.addEventListener("input", createPreview);
 
 
-/*
-    Whenever the user Click to Reset,
-    createPreview() will run.
-*/
+/* ========================================
+   ✅ Apply ==III== RESET ALL FILE WITH PREVIEW
+======================================== */
 cReset.onclick = () =>{
   //HTML Preview
-   Doc1.value = `<i>Ex,</i>
-
+   htmlFile.value = `<div class="app">
+<i>Ex,</i>
 <h1>Hellow World</h1>
-<p>Welcome to Live Code Editor.</p>`; 
+<p>Welcome to Live Code Editor.</p>
+</div>`; 
 
   //CSS Preview
-   Doc2.value = `*{
+   cssFile.value = `*{
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -123,7 +127,9 @@ cReset.onclick = () =>{
 body{
   width: 100%;
   height: 100vh;
-  padding: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: #FFFFFF;
 }
 
@@ -143,9 +149,125 @@ p{
 }`; 
 
 //JS Preview
-   Doc3.value = `window.onclick = () => {
-  alert(' ʜᴇʟʟᴏ(•̀’◡’•̀)ﾉ Brother.');
-}`;
+   jsFile.value = "";
    
    createPreview();
 }
+
+
+/* ========================================
+   ✅ Apply ==III== RESET ALL FILE WITH PREVIEW
+======================================== */
+function reStartPreview() {
+  //HTML Preview
+   htmlFile.value = `<div class="app">
+<i>Ex,</i>
+<h1>Hellow World</h1>
+<p>Welcome to Live Code Editor.</p>
+</div>`; 
+
+  //CSS Preview
+   cssFile.value = `*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body{
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #FFFFFF;
+}
+
+i{
+  color: #707070;
+  font-weight: 1000;
+}
+
+h1{
+  color: #333;
+}
+
+p{
+  color: blue;
+  font-size: 20px;
+  font-weight: 800;
+}`; 
+
+//JS Preview
+   jsFile.value = "";
+   
+   createPreview();
+}
+
+
+
+
+
+  function openBrowser(url) {
+      // নতুন ট্যাব/ব্রাউজারে ওপেন করবে
+      window.open(url, "_blank");
+  }
+
+
+  function openApp(url) {
+    window.location.href = url;
+  }
+
+
+
+/* ========================================
+   AUTO SAVE প্রতি 0.01 second
+======================================== */
+function autoSave() {
+  localStorage.setItem("htmlCode", htmlFile.value);
+  localStorage.setItem("cssCode", cssFile.value);
+  localStorage.setItem("jsCode", jsFile.value);
+  //console.log("✅ Auto-saved code");
+}
+setInterval(autoSave, 10);
+
+
+/* ========================================
+   APP START হলে CHECK করো
+======================================== */
+function initApp() {
+  const savedHTML = localStorage.getItem("htmlCode");
+  const savedCSS  = localStorage.getItem("cssCode");
+  const savedJS   = localStorage.getItem("jsCode");
+
+  // যদি কোনো একটা code থাকে → file by file load করো
+  let loaded = false;
+
+  if (savedHTML !== null) {
+    htmlFile.value = savedHTML;
+    loaded = true;
+    console.log("✅ HTML loaded");
+  }
+  if (savedCSS !== null) {
+    cssFile.value = savedCSS;
+    loaded = true;
+    console.log("✅ CSS loaded");
+  }
+  if (savedJS !== null) {
+    jsFile.value = savedJS;
+    loaded = true;
+    console.log("✅ JS loaded");
+  }
+
+  if (loaded) {
+    createPreview();
+    console.log("✅ Preview refreshed with saved code");
+  } else {
+    reStartPreview();
+    console.log("⚠️ No saved code found, restarted preview");
+  }
+}
+
+/* ========================================
+   APP LOAD হলে initApp() call করো
+======================================== */
+window.onload = initApp;
